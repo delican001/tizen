@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width,user-scalable=no"/>
+	<link rel="stylesheet"  href="./lib/tau/mobile/theme/default/tau.css">
+	<link rel="stylesheet" type="text/css" href="./css/style.css"/>
+	<title>Tizen Web IDE - Template - Tizen - Tizen Web UI Framework - Multi Page</title>
+</head>
+
+<body>
+	<!-- Start of first page: #one -->
+	<div class="ui-page" id="one">
+		<div class="ui-header">
+			<h1>Multi-page application</h1>
+		</div><!-- /header -->
+
+		<div class="ui-content" id="div_one">
+		
+            <button onclick="button1_func()">Resolution</button>
+            <button onclick="button2_func()">Image</button>
+			<p>
+				<a href="#two">to video</a>
+			</p>			
+			</div>
+		</div><!-- /content -->
+	</div><!-- /page one -->
+
+
+	<!-- Start of second page: #two -->
+	<div class="ui-page" id="two">
+		<div class="ui-header">
+			<h1>Two</h1>
+		</div><!-- /header -->
+
+		<div class="ui-content">
+			<video width="320" height="160" controls="controls"> <source src="images/vid.mp4" type="video/mp4"></video>
+			<h2>Two</h2>
+			<p>
+			<a href="#three">to youtube</a>
+			</p>
+			</div><!-- /content -->
+	</div><!-- /page two -->
+	
+	<!-- #three -->
+	<div class="ui-page" id="three"> 
+	<div class="ui-content">
+	<iframe width="320" height="160" src="https://www.youtube.com/embed/JGwWNGJdvx8?ecver=1" frameborder="0" allowfullscreen></iframe>	
+	<p id="text"> here is some text to change </p>
+	<p>
+	<a href="#four">to canvas</a>
+	</p>
+	</div>
+	</div>
+	<script type="text/javascript" src="./lib/tau/mobile/js/jquery.js"></script>
+	<script type="text/javascript" src="./lib/tau/mobile/js/tau.js"></script>
+	<script src="./js/main.js"></script>
+	
+	<!-- #four -->
+	<div class="ui-page" id="four">
+	<div class="ui-content">
+	<canvas id='draw' width='240' height='180' style='border:1px solid;'></canvas> 
+	<script type='text/javascript'>
+var canvas=document.getElementById("draw")
+var x=canvas.getContext("2d");
+var tiz=canvas.getContext("2d");
+var js=canvas.getContext("2d");
+var html=canvas.getContext("2d");
+var can=canvas.getContext("2d");
+tiz.font="30px Arial";  
+tiz.fillText("Tizen", 17, 40);
+js.fillStyle="blue"; 
+js.fillText("Javascript", 15, 65);
+can.fillText("canvas", 60, 110);
+html.fillStyle="red"; 
+html.fillText("HTML5", 7, 100);
+</script>
+<p>
+	<a href="#five">to second canvas</a>
+	</p>
+	</div>
+	</div>
+	
+	<!-- #five -->
+	<div class="ui-page" id="five">
+	<div class="ui-content">
+	<canvas id="circle" width='240' height='180' style='border:1px solid;'>
+	<script type='text/javascript'>
+	anime();    
+	</script>
+	</canvas>
+	<p>
+	<a href="#six">to second canvas</a>
+	</p>
+	</div>
+	</div>
+	
+	<!-- #six -->
+	<div class="ui-page" id="six">
+	<div class="ui-content">
+	<canvas id="check" width='240' height='180' style='border:1px solid;'>
+	<script type='text/javascript'>
+	check();
+	</script>
+	</canvas>
+	</div>
+	</div>
+</body>
+</html>
