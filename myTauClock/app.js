@@ -43,12 +43,15 @@ function qwe () {
 	console.log(minute);
 	console.log(second);
 	console.log(_second);
-	var _date = new Date (year,month,day,hour,minute,_second);
-	var date = new Date (year,month,day,hour,minute,second);
+	var _date = new Date (year,month,day+9,hour,minute,_second);
+	var date = new Date (year,month,day+9,hour,minute,second);
 	var _alarm = new tizen.AlarmAbsolute(_date);
 	var alarm = new tizen.AlarmAbsolute(date);
 	var appControl = new tizen.ApplicationControl("http://tizen.org/appcontrol/operation/view");
 	tizen.alarm.add(alarm, tizen.application.getCurrentApplication().appInfo.id, appControl);
+	var setted = _alarm.getNextScheduledDate();
+	console.log(setted);
+	console.log(date);
 	
 	
 }

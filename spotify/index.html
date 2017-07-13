@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Example of the Authorization Code flow with Spotify</title>
+    <style type="text/css">
+      #login, #loggedin {
+        display: none;
+      }
+      .text-overflow {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 500px;
+      }
+    </style>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+    
+    <script src="lib/handlebars.js"></script>
+    <script src="lib/jquerymobile.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>    
+	<script type="text/javascript" src="./lib/tau/mobile/js/tau.js"></script>
+    </head>
+	
+  <body>
+  
+  <div class="ui-page" id="zero">
+  
+  <a href="#one">START</a>
+  
+  </div>
+  
+  <div class="ui-page" id="one">
+  		<div class="container">
+ 	 	<a href="#two">TEST</a>  
+		</div>
+    <div id="search_class" >    
+      <p>Song name</p>
+      <input id="str_search" type="text" value="" ></input>
+      <p>Artist name</p>
+      <p><input id="str_artist" type="text" value="" ></input></p>
+      <button class="btn btn-success" id="search">Search</button>
+
+      <p id="search_info"></p>
+      <p id="to_add"><img id="search_img">
+	  <button id="next_" value="0" hidden="true" >next</button>
+	  </p>
+      <audio id="search_audio" controls style="display: none;"></audio>
+      </div>
+      
+      
+	  
+
+
+    <script>
+      (function() { 
+		var tracks_arr;
+	
+		function next_track (value){
+			if (tracks_arr.length>value){
+			console.log(value);
+			var next_val=Number(value)+1;
+			$("#next_").val(next_val);
+			console.log($("#next_").val());
+			$("#search_audio").src=tracks_arr[next_val].preview_url;
+            $("#search_info").html(tracks_arr[next_val].name+" by "+tracks_arr[next_val].artists[0].name);
+            $("#search_img").src=tracks_arr[next_val].album.images[1].url;
+			
+			}
+		}
+		
+
+    document.getElementById('search').addEventListener('click', function() {
+        var query=$("#str_search").val();
+        var artist_str=$("#str_artist").val();
+      if(artist_str)
+      query += ' artist:' + artist_str;
+
+        
+                $.ajax({
+            url: 'https://api.spotify.com/v1/search',
+                                    headers: {
+                  'Authorization': 'Bearer ' + access_token
+                },
+            data: {
+                q: query,
+                type: 'track'
+            },
+            success: function (response) {
+                if (response.tracks.items.length) {
+				tracks_arr=response.tracks.items;
+				console.log(tracks_arr);
+				$("#next_").show();
+				$("#next_").val("0");
+				$("#next_").off("click");
+				$("#next_").click(function(){
+				var value=Number($("#next_").val());
+			if (tracks_arr.length-1>value){
+			console.log(value);
+			var next_val=value+1;
+			$("#next_").val(next_val);
+			console.log($("#next_").val());
+			$("#search_audio").attr("src",tracks_arr[next_val].preview_url);
+            $("#search_info").html(tracks_arr[next_val].name+" by "+tracks_arr[next_val].artists[0].name);
+            $("#search_img").attr("src",tracks_arr[next_val].album.images[1].url);			
+			}
+			else alert ("no more tracks:(((");
+		})
+                    var track = response.tracks.items[0];
+					console.log(response);
+                    console.log(track);
+                  document.getElementById("search_audio").style.display = 'block';
+                  document.getElementById("search_audio").src=track.preview_url;
+                  document.getElementById("search_info").innerHTML=track.name+" by "+track.artists[0].name;
+                  if(track.album.images[1].url)
+                  document.getElementById("search_img").src=track.album.images[1].url;
+                  if(track.preview_url===null)
+                    alert("Sorry we don't have preview for this track :(");
+                }
+            }
+        });
+		
+;
+          }, false);
+
+        
+      })();
+    </script>
+    </div>
+    
+  <div class="ui-page" id="two">
+  <a href="https://accounts.spotify.com/en-US/login">REGISTER BEACH</a>
+  </div>
+  </body>
+</html>
+
