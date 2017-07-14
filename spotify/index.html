@@ -1,0 +1,321 @@
+<!doctype html>
+<html>
+  <head>
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	
+ 	<script src="lib/handlebars.js"></script>
+    <script src="lib/jquerymobile.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+    <style type="text/css">
+    body{
+width:100%;
+height:100%;
+}
+</style>
+    </head>
+     <body>
+    <div id="authorization">
+                <h1>You authoraized as</h1>
+		  <p><img id="avatar" width=150px height=150px></p>
+		  <p id="id_field">ID </p>
+		  <p id="email_field">Email </p>
+		  <img id="logIn" src="logIn.png" width=100px height=100px>
+          <img id="start" src="start.png" width=100px height=100px style="display: none;">  
+		  
+		  </div>
+
+   
+    <div id="search_class" style="display: none;" >
+      <p>Song name</p>
+      <input id="str_search" type="text" value="" >
+      <p>Artist name</p>
+      <p><input id="str_artist" type="text" value="" ></p>
+       <p> <img id="search" src="search.jpg" width=80px height=80px> </p>
+		
+
+      <p id="search_info"></p>
+      <p id="to_add"><img id="search_img">
+	  <button id="next_"  value="0" hidden="true"></button>
+	  </p>
+      <audio id="search_audio" controls style="display: none;"></audio>
+      </div>
+
+    
+    <div id="list_playlist" style="  width: 100%;
+  margin: 0 auto;display: none; " >
+        <p>  <button id="getPlayLists" type="button" class="btn btn-success">GetPlayLists</button> </p>
+	  <img id="playlist_1" width=  150px height=150px>
+        <p id="playlist_1_name"><p>
+        <select id="pl_select" name="playLists"> </select>
+        </div>
+
+
+
+
+
+
+    <script id="get_token">
+      $.ajax({
+      dataType: "jsonp",
+      crossDomain : true,
+      url: "http://egeshki.ru/spotify/",
+      success: function(response){
+      jsonpObtainer(response);
+      },
+      error: function(response){
+      console.log(response);
+      }
+    });
+          </script>
+
+
+
+    <script>
+      (function() {
+//          window.open('http://egeshki.ru/spotify/');
+
+        /**
+         * Obtains parameters from the hash of the URL
+         * @return Object
+         */
+
+
+
+
+
+
+
+
+
+
+
+
+		var client_id;
+		var tracks_arr;
+
+		function next_track (value){
+			if (tracks_arr.length>value){
+			console.log(value);
+			var next_val=Number(value)+1;
+			$("#next_").val(next_val);
+			console.log($("#next_").val());
+			$("#search_audio").src=tracks_arr[next_val].preview_url;
+            $("#search_info").html(tracks_arr[next_val].name+" by "+tracks_arr[next_val].artists[0].name);
+            $("#search_img").src=tracks_arr[next_val].album.images[1].url;
+
+			}
+		}
+
+                  console.log("token:"+access_token);
+
+
+
+    document.getElementById('search').addEventListener('click', function() {
+        var query=$("#str_search").val();
+                          console.log("token:"+access_token);
+
+        var artist_str=$("#str_artist").val();
+      if(artist_str)
+      query += ' artist:' + artist_str;
+
+
+                $.ajax({
+            url: 'https://api.spotify.com/v1/search',
+                                    headers: {
+                  'Authorization': 'Bearer ' + access_token
+                },
+            data: {
+                q: query,
+                type: 'track'
+            },
+            success: function (response) {
+                if (response.tracks.items.length) {
+				tracks_arr=response.tracks.items;
+					console.log(tracks_arr);
+					playTracks(tracks_arr);
+
+                    var track = response.tracks.items[0];
+					console.log(response);
+                    console.log(track);
+                  document.getElementById("search_audio").style.display = 'block';
+                  document.getElementById("search_audio").src=track.preview_url;
+                  document.getElementById("search_info").innerHTML=track.name+" by "+track.artists[0].name;
+                  if(track.album.images[1].url)
+                  document.getElementById("search_img").src=track.album.images[1].url;
+                  if(track.preview_url===null)
+                    alert("Sorry we don't have preview for this track :(");
+                }
+            }
+        });
+
+;
+          }, false);
+		  
+		  
+		  
+		  
+		  document.getElementById('logIn').addEventListener('click', function() {
+			  
+			   $.ajax({
+                url: 'https://api.spotify.com/v1/me',
+                headers: {
+                  'Authorization': 'Bearer ' + access_token
+                },
+                success: function(response) {
+				$("#avatar").attr("src",response.images[0].url);
+				$("#id_field").html("ID: "+response.id);
+				$("#email_field").html("Email: "+response.email);
+				client_id=response.id;
+						  	$.ajax({
+                url: 'https://api.spotify.com/v1/users/'+client_id+'/playlists',
+                headers: {
+                  'Authorization': 'Bearer ' + access_token
+                },
+                success: function(response) {
+					playListSelect(response);
+				
+				}
+            })	;
+
+				}
+            });
+              $("#logIn").hide();
+              $("#start").show();
+
+       
+          }, false);
+          
+          
+          	  document.getElementById('start').addEventListener('click', function() {
+			  
+              $("#start").hide();
+              $("#search_class").show();
+                $("#list_playlist").show();
+               $("#authorization").hide();
+
+
+       
+          }, false);
+          
+
+		  
+			document.getElementById('getPlayLists').addEventListener('click', function() {
+			  
+			                        $.ajax({
+                url: 'https://api.spotify.com/v1/users/'+client_id+'/playlists',
+                headers: {
+                  'Authorization': 'Bearer ' + access_token
+                },
+                success: function(response) {
+					var e = document.getElementById("pl_select");
+					var pl_id=e.options[e.selectedIndex].value;
+					console.log(pl_id);
+				$("#playlist_1").attr("src",response.items[pl_id].images[0].url);
+				$("#playlist_1_name").html("ID: "+response.items[pl_id].name);
+//				playTracks(response.items[0].tracks.items);
+				console.log("items="+response.items[0].owner);
+					$.ajax({
+                url: response.items[pl_id].href,
+                headers: {
+                  'Authorization': 'Bearer ' + access_token
+                },
+                success: function(response) {
+					playSong(0,response);
+				}
+            });
+			  
+          
+					
+		
+				
+				
+				
+				
+				
+				}
+            });
+			  
+          }, false);
+
+
+      })();
+		
+		function playTracks(tracks_arr)
+		{
+				$("#next_").show();
+				$("#next_").val("0");
+				$("#next_").off("click");
+				$("#next_").click(function(){
+				var value=Number($("#next_").val());
+			if (tracks_arr.length-1>value){
+			console.log(value);
+			var next_val=value+1;
+			$("#next_").val(next_val);
+			console.log($("#next_").val());
+			$("#search_audio").attr("src",tracks_arr[next_val].preview_url);
+            $("#search_info").html(tracks_arr[next_val].name+" by "+tracks_arr[next_val].artists[0].name);
+            $("#search_img").attr("src",tracks_arr[next_val].album.images[1].url);
+			}
+			else alert ("no more tracks:(((");
+		})
+		}
+		function playSong(id,response)
+		{		
+		 		$("#next_").show();
+				$("#next_").off("click");
+				$("#next_").click(function(){
+				id=Number(id)+1;
+				try{
+					playSong(id,response);}
+								 
+				catch(err)
+				{
+				alert("Out of Tracks");
+				}} )
+					
+					
+				  document.getElementById("search_audio").style.display = 'block';
+                  document.getElementById("search_audio").src=response.tracks.items[id].track.preview_url;
+                  document.getElementById("search_info").innerHTML=response.tracks.items[id].track.name+" by "+response.tracks.items[id].track.artists[0].name;
+                  if(response.tracks.items[id].track.album.images[1].url)
+                  document.getElementById("search_img").src=response.tracks.items[id].track.album.images[1].url;
+                  if(response.tracks.items[id].track.preview_url===null)
+                    alert("Sorry we don't have preview for this track :(");
+		
+		}
+		
+		
+				  
+
+		
+		function playListSongs(response)
+		{
+		var objSel = document.getElementById("pl_select");
+		for(var i=0;i<response.tracks.items.length;i++)
+
+		objSel.options[i] = new Option(response.tracks.items[i].track.name, i);
+
+				
+		}
+		
+		
+		function playListSelect(response)
+		{
+		var objSel = document.getElementById("pl_select");
+		for(var i=0;i<response.items.length;i++)
+		{
+		var temp=response.items[i].name;
+		objSel.options[i] = new Option(temp, i);
+
+		}
+
+				
+		}
+		
+		
+		
+    </script>
+  </body>
+</html>
+

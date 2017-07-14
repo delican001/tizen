@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head >
+    <title>Example of the Authorization Code flow with Spotify</title>
+    <style type="text/css">
+      #login, #loggedin {
+        display: none;
+      }
+      .text-overflow {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 500px;
+      }
+    </style>
+    
+    <script src="lib/handlebars.js"></script>
+    <script src="lib/jquerymobile.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="js/main.js"></script> 
+    </head>
+	
+  <body>
+  
+  <div class="ui-page" id="zero">
+  <p></p>
+  <a href="index.html">START</a>
+  <p></p>
+  <button id="pop">pop</button>
+  <p></p>
+  <p id="test"></p>  
+  <button onclick="reg_please();">rabotay, pleas</button>
+  <div id="1btnPopup" class="ui-popup">
+      <div class="ui-popup-header">Power saving mode</div>
+      <div class="ui-popup-content">
+         </div>
+      <div class="ui-popup-footer">
+      <button id="1btnPopup-cancel" class="ui-btn">Cancel</button>
+      <script>
+   /* Popup opens with button click */
+   document.getElementById('pop').addEventListener("click", function(ev)
+   {
+      tau.openPopup("#1btnPopup");
+   });
+
+   /* Popup closes with Cancel button click */
+   document.getElementById('1btnPopup-cancel').addEventListener('click', function(ev)
+   {
+      tau.closePopup();
+   });
+</script>
+   </div>
+	</div>  
+  </div>
+  </body>
+</html>
