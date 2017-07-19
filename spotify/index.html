@@ -1,8 +1,7 @@
 <!doctype html>
 <html>
   <head>
-  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-	
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">	
  	<script src="lib/handlebars.js"></script>
     <script src="lib/jquerymobile.js"></script>
     <script src="lib/bootstrap.min.js"></script>
@@ -21,27 +20,20 @@ height:100%;
 		  <p id="id_field">ID </p>
 		  <p id="email_field">Email </p>
 		  <img id="logIn" src="logIn.png" width=100px height=100px>
-          <img id="start" src="start.png" width=100px height=100px style="display: none;">  
-		  
-		  </div>
-
-   
+          <img id="start" src="start.png" width=100px height=100px style="display: none;">  		  
+	</div>
     <div id="search_class" style="display: none;" >
       <p>Song name</p>
       <input id="str_search" type="text" value="" >
       <p>Artist name</p>
       <p><input id="str_artist" type="text" value="" ></p>
        <p> <img id="search" src="search.jpg" width=80px height=80px> </p>
-		
-
       <p id="search_info"></p>
       <p id="to_add"><img id="search_img">
 	  <button id="next_"  value="0" hidden="true"></button>
 	  </p>
       <audio id="search_audio" controls style="display: none;"></audio>
-      </div>
-
-    
+      </div>    
     <div id="list_playlist" style="  width: 100%;
   margin: 0 auto;display: none; " >
         <p>  <button id="getPlayLists" type="button" class="btn btn-success">GetPlayLists</button> </p>
@@ -49,12 +41,6 @@ height:100%;
         <p id="playlist_1_name"><p>
         <select id="pl_select" name="playLists"> </select>
         </div>
-
-
-
-
-
-
     <script id="get_token">
       $.ajax({
       dataType: "jsonp",
@@ -68,32 +54,10 @@ height:100%;
       }
     });
           </script>
-
-
-
     <script>
       (function() {
-//          window.open('http://egeshki.ru/spotify/');
-
-        /**
-         * Obtains parameters from the hash of the URL
-         * @return Object
-         */
-
-
-
-
-
-
-
-
-
-
-
-
 		var client_id;
 		var tracks_arr;
-
 		function next_track (value){
 			if (tracks_arr.length>value){
 			console.log(value);
@@ -103,23 +67,14 @@ height:100%;
 			$("#search_audio").src=tracks_arr[next_val].preview_url;
             $("#search_info").html(tracks_arr[next_val].name+" by "+tracks_arr[next_val].artists[0].name);
             $("#search_img").src=tracks_arr[next_val].album.images[1].url;
-
-			}
-		}
-
+			}		}
                   console.log("token:"+access_token);
-
-
-
     document.getElementById('search').addEventListener('click', function() {
         var query=$("#str_search").val();
                           console.log("token:"+access_token);
-
         var artist_str=$("#str_artist").val();
       if(artist_str)
       query += ' artist:' + artist_str;
-
-
                 $.ajax({
             url: 'https://api.spotify.com/v1/search',
                                     headers: {
@@ -134,7 +89,6 @@ height:100%;
 				tracks_arr=response.tracks.items;
 					console.log(tracks_arr);
 					playTracks(tracks_arr);
-
                     var track = response.tracks.items[0];
 					console.log(response);
                     console.log(track);
@@ -148,15 +102,8 @@ height:100%;
                 }
             }
         });
-
-;
-          }, false);
-		  
-		  
-		  
-		  
-		  document.getElementById('logIn').addEventListener('click', function() {
-			  
+          }, false); 
+		  document.getElementById('logIn').addEventListener('click', function() {			  
 			   $.ajax({
                 url: 'https://api.spotify.com/v1/me',
                 headers: {
@@ -173,35 +120,21 @@ height:100%;
                   'Authorization': 'Bearer ' + access_token
                 },
                 success: function(response) {
-					playListSelect(response);
-				
+					playListSelect(response);				
 				}
             })	;
-
 				}
             });
               $("#logIn").hide();
-              $("#start").show();
-
-       
-          }, false);
-          
-          
-          	  document.getElementById('start').addEventListener('click', function() {
-			  
+              $("#start").show();       
+          }, false); 
+	      document.getElementById('start').addEventListener('click', function() {			  
               $("#start").hide();
               $("#search_class").show();
                 $("#list_playlist").show();
-               $("#authorization").hide();
-
-
-       
-          }, false);
-          
-
-		  
-			document.getElementById('getPlayLists').addEventListener('click', function() {
-			  
+               $("#authorization").hide();       
+          }, false);  
+	      document.getElementById('getPlayLists').addEventListener('click', function() {			  
 			                        $.ajax({
                 url: 'https://api.spotify.com/v1/users/'+client_id+'/playlists',
                 headers: {
@@ -223,24 +156,9 @@ height:100%;
                 success: function(response) {
 					playSong(0,response);
 				}
-            });
-			  
-          
-					
-		
-				
-				
-				
-				
-				
-				}
-            });
-			  
-          }, false);
-
-
-      })();
-		
+            });}
+            });			  
+          }, false);})();		
 		function playTracks(tracks_arr)
 		{
 				$("#next_").show();
@@ -267,54 +185,33 @@ height:100%;
 				$("#next_").click(function(){
 				id=Number(id)+1;
 				try{
-					playSong(id,response);}
-								 
+					playSong(id,response);}								 
 				catch(err)
 				{
 				alert("Out of Tracks");
-				}} )
-					
-					
-				  document.getElementById("search_audio").style.display = 'block';
+				}} )	
+			document.getElementById("search_audio").style.display = 'block';
                   document.getElementById("search_audio").src=response.tracks.items[id].track.preview_url;
                   document.getElementById("search_info").innerHTML=response.tracks.items[id].track.name+" by "+response.tracks.items[id].track.artists[0].name;
                   if(response.tracks.items[id].track.album.images[1].url)
                   document.getElementById("search_img").src=response.tracks.items[id].track.album.images[1].url;
                   if(response.tracks.items[id].track.preview_url===null)
-                    alert("Sorry we don't have preview for this track :(");
-		
-		}
-		
-		
-				  
-
-		
+                    alert("Sorry we don't have preview for this track :(");}	
 		function playListSongs(response)
 		{
 		var objSel = document.getElementById("pl_select");
 		for(var i=0;i<response.tracks.items.length;i++)
-
-		objSel.options[i] = new Option(response.tracks.items[i].track.name, i);
-
-				
+		objSel.options[i] = new Option(response.tracks.items[i].track.name, i);				
 		}
-		
-		
-		function playListSelect(response)
+	    	function playListSelect(response)
 		{
 		var objSel = document.getElementById("pl_select");
 		for(var i=0;i<response.items.length;i++)
 		{
 		var temp=response.items[i].name;
 		objSel.options[i] = new Option(temp, i);
-
+		}				
 		}
-
-				
-		}
-		
-		
-		
     </script>
   </body>
 </html>
